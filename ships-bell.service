@@ -1,0 +1,10 @@
+[Unit]
+Description=Ships Bell
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ike/code/useful/ships-bell
+ExecStart=/home/ike/code/useful/ships-bell/start.sh
+
+[Install]
+WantedBy=multi-user.target
