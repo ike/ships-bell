@@ -3,6 +3,8 @@
 ## Build/Test/Lint Commands
 - **Lint**: `make pylint` or `pylint3 *.py tests/*.py`
 - **Test all**: `make test` (runs pylint + unittest)
+- **Test core**: `python3 -m unittest tests.test_ships_bell`
+- **Test installers**: `python3 -m unittest tests.test_installers`
 - **Test single**: `python3 -m unittest tests.test_ships_bell.TestShipsBell.test_method_name`
 - **Coverage**: `make test_cover` (100% coverage required)
 - **Clean**: `make clean`

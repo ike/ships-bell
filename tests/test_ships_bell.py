@@ -1,4 +1,5 @@
 """Tests for Ship's Bell application."""
+
 import unittest
 from unittest.mock import Mock, patch
 
@@ -10,6 +11,7 @@ from ships_bell import ShipsBell, ShipsBellError, handle_args
 
 class TestShipsBell(unittest.TestCase):
     """Test cases for ShipsBell class."""
+
     def test_step_happy_path(self):
         """Test normal bell striking behavior."""
         sb = ShipsBell(".", 0, 24)
@@ -94,7 +96,7 @@ class TestShipsBell(unittest.TestCase):
 
     @patch("builtins.open", create=True)
     @patch("os.makedirs")
-    def test_trigger_files_created(self, mock_makedirs, mock_open):
+    def test_trigger_files_created(self, mock_makedirs, mock_open):  # pylint: disable=unused-argument
         """Test that trigger files are created for audio playback."""
         sb = ShipsBell(".", 0, 24)
         mock_file = Mock()
@@ -106,18 +108,18 @@ class TestShipsBell(unittest.TestCase):
 
         mock_open.reset_mock()
         mock_file.reset_mock()
-        
+
         sb.play_double_strike()
         mock_open.assert_called()
         mock_file.write.assert_called()
 
     @patch("builtins.open", create=True)
     @patch("os.makedirs")
-    def test_trigger_file_error_handling(self, mock_makedirs, mock_open):
+    def test_trigger_file_error_handling(self, mock_makedirs, mock_open):  # pylint: disable=unused-argument
         """Test trigger file creation error handling."""
         sb = ShipsBell(".", 0, 24)
         mock_open.side_effect = IOError("Permission denied")
-        
+
         with self.assertRaises(ShipsBellError):
             sb.play_single_strike()
 
@@ -160,8 +162,8 @@ class TestShipsBell(unittest.TestCase):
         """Test argument parsing with defaults."""
         args1 = ["this_script"]
         sb = handle_args(args1)
-        self.assertEqual(0, sb.start_time)
-        self.assertEqual(24, sb.end_time)
+        self.assertEqual(9, sb.start_time)
+        self.assertEqual(20, sb.end_time)
 
     def test_handle_args_from_to(self):
         """Test argument parsing with custom times."""

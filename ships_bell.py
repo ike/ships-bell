@@ -6,12 +6,9 @@ A little app that plays ship's bell sounds every 30 minutes.
 
 import argparse
 import os
-import subprocess
 import sys
 import threading
 import time
-
-
 
 
 class ShipsBellError(Exception):
@@ -20,14 +17,19 @@ class ShipsBellError(Exception):
 
 class ShipsBell(threading.Thread):
     """Ship's bell timer that plays bell sounds every 30 minutes."""
+
     SECONDS_PER_MINUTE = 60
     MINUTES_PER_HALF_HOUR = 30
     MAX_DOUBLE_STRIKES = 4
 
-    def __init__(self, working_dir, start=0, end=24):
+    def __init__(self, working_dir=None, start=0, end=24):
         super().__init__()
         self.daemon = True
-        self.working_dir = working_dir
+        # Auto-detect working directory if not provided
+        if working_dir is None:
+            self.working_dir = os.path.dirname(os.path.abspath(__file__))
+        else:
+            self.working_dir = working_dir
         assert end >= start
         self.start_time = start
         self.end_time = end
@@ -49,18 +51,18 @@ class ShipsBell(threading.Thread):
             # Strike bell at every half or full hour.
             if (minutes % ShipsBell.MINUTES_PER_HALF_HOUR) == 0:
                 double_strikes, single_strikes = self.compute_strikes(hours, minutes)
-                
+
                 for i in range(double_strikes):
                     if i > 0:
-                        time.sleep(0.8)
+                        time.sleep(0.3)
                     self.play_double_strike()
                 if double_strikes > 0 and single_strikes > 0:
-                    time.sleep(0.8)
+                    time.sleep(0.3)
                 for i in range(single_strikes):
                     if i > 0:
-                        time.sleep(0.8)
+                        time.sleep(0.3)
                     self.play_single_strike()
-                
+
                 # Play special noon sound after regular bells at 12:00
                 if hours == 12 and minutes == 0:
                     time.sleep(1.0)  # Brief pause after bells
@@ -103,17 +105,17 @@ class ShipsBell(threading.Thread):
 
     def trigger_user_audio(self, strike_type):
         """Trigger audio via file system - completely separate from service process."""
-        trigger_dir = os.path.expanduser("~/.local/share/ships-bell")
+        trigger_dir = os.path.expanduser("~/.local/share/ships-bell/triggers")
         os.makedirs(trigger_dir, exist_ok=True)
-        
+
         trigger_file = os.path.join(trigger_dir, f"{strike_type}_strike")
-        
+
         # Create trigger file - watcher process will detect and play audio
         try:
-            with open(trigger_file, "w") as f:
+            with open(trigger_file, "w", encoding="utf-8") as f:
                 f.write(str(time.time()))
         except Exception as e:
-            raise ShipsBellError(f"Failed to create trigger file: {e}")
+            raise ShipsBellError(f"Failed to create trigger file: {e}") from e
 
 
 def handle_args(args):
@@ -125,26 +127,33 @@ def handle_args(args):
     parser.add_argument(
         "--from",
         type=int,
-        default=0,
-        help="Full hour, from which bell sound is emitted (default:0)",
+        default=9,
+        help="Full hour, from which bell sound is emitted (default:9)",
     )
     parser.add_argument(
         "--to",
         type=int,
-        default=24,
-        help="Full hour, until which bell sound is emitted (default:24)",
+        default=20,
+        help="Full hour, until which bell sound is emitted (default:20)",
+    )
+    parser.add_argument(
+        "--working-dir",
+        type=str,
+        help="Working directory for audio files (auto-detected if not provided)",
     )
     parsed_args = parser.parse_args(args[1:])
     from_hour = getattr(parsed_args, "from")
     to_hour = getattr(parsed_args, "to")
+    working_dir = getattr(parsed_args, "working_dir")
+
     if from_hour < 0 or from_hour > 24 or to_hour < 0 or to_hour > 24:
         raise ShipsBellError("Hours must be in range 0..24.")
     if from_hour > to_hour:
         raise ShipsBellError(
             "Value of 'to' hour must be greater than or equal to value of 'from' hour."
         )
-    script_dir = os.path.dirname(os.path.abspath(this_script))
-    return ShipsBell(script_dir, from_hour, to_hour)
+
+    return ShipsBell(working_dir, from_hour, to_hour)
 
 
 if __name__ == "__main__":  # pragma: no cover

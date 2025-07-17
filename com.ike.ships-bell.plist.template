@@ -3,20 +3,20 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.ike.ships-bell</string>
+    <string>{{USER}}.ships-bell</string>
     
     <key>ProgramArguments</key>
     <array>
         <string>/usr/bin/python3</string>
-        <string>/Users/ike/code/personal/ships-bell/ships_bell.py</string>
+        <string>{{INSTALL_DIR}}/ships_bell.py</string>
         <string>--from</string>
-        <string>9</string>
+        <string>{{START_HOUR}}</string>
         <string>--to</string>
-        <string>20</string>
+        <string>{{END_HOUR}}</string>
     </array>
     
     <key>WorkingDirectory</key>
-    <string>/Users/ike/code/personal/ships-bell</string>
+    <string>{{INSTALL_DIR}}</string>
     
     <key>RunAtLoad</key>
     <true/>
@@ -25,10 +25,10 @@
     <true/>
     
     <key>StandardOutPath</key>
-    <string>/Users/ike/code/personal/ships-bell/ships-bell.log</string>
+    <string>{{INSTALL_DIR}}/logs/ships-bell.log</string>
     
     <key>StandardErrorPath</key>
-    <string>/Users/ike/code/personal/ships-bell/ships-bell.error.log</string>
+    <string>{{INSTALL_DIR}}/logs/ships-bell.error.log</string>
     
     <key>ProcessType</key>
     <string>Background</string>

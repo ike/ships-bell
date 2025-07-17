@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.ike.ships-bell-watcher</string>
+    <string>{{USER}}.ships-bell-watcher</string>
     
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/ike/.local/bin/ships-bell-watcher</string>
+        <string>{{INSTALL_DIR}}/ships-bell-watcher</string>
     </array>
     
     <key>RunAtLoad</key>
@@ -17,10 +17,10 @@
     <true/>
     
     <key>StandardOutPath</key>
-    <string>/Users/ike/code/personal/ships-bell/ships-bell-watcher.log</string>
+    <string>{{INSTALL_DIR}}/logs/ships-bell-watcher.log</string>
     
     <key>StandardErrorPath</key>
-    <string>/Users/ike/code/personal/ships-bell/ships-bell-watcher.error.log</string>
+    <string>{{INSTALL_DIR}}/logs/ships-bell-watcher.error.log</string>
     
     <key>ProcessType</key>
     <string>Interactive</string>
