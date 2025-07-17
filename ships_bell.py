@@ -60,6 +60,11 @@ class ShipsBell(threading.Thread):
                     if i > 0:
                         time.sleep(0.8)
                     self.play_single_strike()
+                
+                # Play special noon sound after regular bells at 12:00
+                if hours == 12 and minutes == 0:
+                    time.sleep(1.0)  # Brief pause after bells
+                    self.play_noon_sound()
 
     @staticmethod
     def compute_strikes(hours, minutes):
@@ -91,6 +96,10 @@ class ShipsBell(threading.Thread):
     def play_single_strike(self):
         """Play single strike bell sound."""
         self.trigger_user_audio("single")
+
+    def play_noon_sound(self):
+        """Play special noon sound."""
+        self.trigger_user_audio("noon")
 
     def trigger_user_audio(self, strike_type):
         """Trigger audio via file system - completely separate from service process."""

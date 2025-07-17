@@ -105,6 +105,7 @@ def watch_triggers():
             # Check for trigger files
             double_trigger = os.path.join(TRIGGER_DIR, "double_strike")
             single_trigger = os.path.join(TRIGGER_DIR, "single_strike")
+            noon_trigger = os.path.join(TRIGGER_DIR, "noon_strike")
             
             if os.path.exists(double_trigger):
                 os.remove(double_trigger)
@@ -113,6 +114,10 @@ def watch_triggers():
             if os.path.exists(single_trigger):
                 os.remove(single_trigger)
                 play_audio(f"{SHIPS_BELL_DIR}/res/SingleStrike.mp3")
+                
+            if os.path.exists(noon_trigger):
+                os.remove(noon_trigger)
+                play_audio(f"{SHIPS_BELL_DIR}/res/sir-thats-noon.mp3")
                 
             time.sleep(0.1)  # Check every 100ms
             
