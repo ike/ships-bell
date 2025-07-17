@@ -1,15 +1,17 @@
+"""Tests for Ship's Bell application."""
 import unittest
-from unittest.mock import Mock
-from unittest.mock import patch
-from ships_bell import ShipsBell
-from ships_bell import handle_args
-from ships_bell import ShipsBellError
+from unittest.mock import Mock, patch
+
+from ships_bell import ShipsBell, ShipsBellError, handle_args
 
 # Tests may use long method names.
-#pylint:disable=invalid-name
+# pylint:disable=invalid-name
+
 
 class TestShipsBell(unittest.TestCase):
+    """Test cases for ShipsBell class."""
     def test_step_happy_path(self):
+        """Test normal bell striking behavior."""
         sb = ShipsBell(".", 0, 24)
         sb.play_single_strike = Mock()
         sb.play_double_strike = Mock()
@@ -29,6 +31,7 @@ class TestShipsBell(unittest.TestCase):
         self.assertEqual(0, sb.play_single_strike.call_count)
 
     def test_step_striking_boundary_cases(self):
+        """Test bell striking at boundary times."""
         sb = ShipsBell(".", 0, 24)
         sb.play_single_strike = Mock()
         sb.play_double_strike = Mock()
@@ -55,6 +58,7 @@ class TestShipsBell(unittest.TestCase):
         self.assertEqual(1, sb.play_single_strike.call_count)
 
     def test_strike_computation(self):
+        """Test strike calculation logic."""
         sb = ShipsBell(".")
         # Full hours.
         self.assertEqual((1, 0), sb.compute_strikes(1, 0))
@@ -77,6 +81,7 @@ class TestShipsBell(unittest.TestCase):
         self.assertEqual((0, 1), sb.compute_strikes(0, 30))
 
     def test_sleep_time_computation(self):
+        """Test sleep time calculation."""
         sb = ShipsBell(".")
         self.assertAlmostEqual(30.0 / 2.0 * 60.0, sb.compute_sleep_time(30))
         self.assertAlmostEqual(30.0 / 2.0 * 60.0, sb.compute_sleep_time(0))
@@ -89,6 +94,7 @@ class TestShipsBell(unittest.TestCase):
 
     @patch("subprocess.call")
     def test_mp3_played(self, subprocess_call):
+        """Test MP3 playback functionality."""
         sb = ShipsBell(".", 0, 24)
         subprocess_call.return_value = 0
 
@@ -102,6 +108,7 @@ class TestShipsBell(unittest.TestCase):
 
     @patch("subprocess.call")
     def test_mp3_playing_error(self, subprocess_call):
+        """Test MP3 playback error handling."""
         sb = ShipsBell(".", 0, 24)
 
         with self.assertRaises(ShipsBellError):
@@ -109,6 +116,7 @@ class TestShipsBell(unittest.TestCase):
             sb.play_single_strike()
 
     def test_respect_silent_period(self):
+        """Test silent period functionality."""
         sb = ShipsBell(".", 9, 17)
 
         sb.play_single_strike = Mock()
@@ -143,18 +151,21 @@ class TestShipsBell(unittest.TestCase):
         self.assertEqual(0, sb.play_single_strike.call_count)
 
     def test_handle_args_no_explicit_args(self):
+        """Test argument parsing with defaults."""
         args1 = ["this_script"]
         sb = handle_args(args1)
         self.assertEqual(0, sb.start_time)
         self.assertEqual(24, sb.end_time)
 
     def test_handle_args_from_to(self):
+        """Test argument parsing with custom times."""
         args1 = ["this_script", "--from", "9", "--to", "17"]
         sb = handle_args(args1)
         self.assertEqual(9, sb.start_time)
         self.assertEqual(17, sb.end_time)
 
     def test_handle_args_bad_cases(self):
+        """Test argument parsing error cases."""
         # Outside 0..24 range.
         with self.assertRaises(ShipsBellError):
             _ = handle_args(["this_script", "--from", "99"])
@@ -168,4 +179,3 @@ class TestShipsBell(unittest.TestCase):
         # 'from' greater to 'to'.
         with self.assertRaises(ShipsBellError):
             _ = handle_args(["this_script", "--from", "13", "--to", "12"])
-
