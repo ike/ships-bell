@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.ike.ships-bell</string>
+    
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/ike/code/personal/ships-bell/ships_bell.py</string>
+        <string>--from</string>
+        <string>9</string>
+        <string>--to</string>
+        <string>20</string>
+    </array>
+    
+    <key>WorkingDirectory</key>
+    <string>/Users/ike/code/personal/ships-bell</string>
+    
+    <key>RunAtLoad</key>
+    <true/>
+    
+    <key>KeepAlive</key>
+    <true/>
+    
+    <key>StandardOutPath</key>
+    <string>/Users/ike/code/personal/ships-bell/ships-bell.log</string>
+    
+    <key>StandardErrorPath</key>
+    <string>/Users/ike/code/personal/ships-bell/ships-bell.error.log</string>
+    
+    <key>ProcessType</key>
+    <string>Background</string>
+    
+    <key>LimitLoadToSessionType</key>
+    <array>
+        <string>Aqua</string>
+    </array>
+</dict>
+</plist>

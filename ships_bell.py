@@ -11,8 +11,8 @@ import sys
 import threading
 import time
 
-# If you don't have the 'mpg321' MP3 player, adapt this invocation to your needs.
-MP3_PLAYER_CALL = "mpg321 -q -g 10 {mp3_file}"
+# Using macOS native audio player for better background service compatibility
+MP3_PLAYER_CALL = "afplay {mp3_file}"
 
 
 class ShipsBellError(Exception):
@@ -121,7 +121,8 @@ def handle_args(args):
         raise ShipsBellError(
             "Value of 'to' hour must be greater than or equal to value of 'from' hour."
         )
-    return ShipsBell(os.path.dirname(this_script), from_hour, to_hour)
+    script_dir = os.path.dirname(os.path.abspath(this_script))
+    return ShipsBell(script_dir, from_hour, to_hour)
 
 
 if __name__ == "__main__":  # pragma: no cover

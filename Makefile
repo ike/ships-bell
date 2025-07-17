@@ -8,7 +8,7 @@ all:
 
 .PHONY:
 pylint:
-	@python -m pylint *.py tests/*.py
+	@python3 -m pylint *.py tests/*.py
 
 .PHONY:
 test:
