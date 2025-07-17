@@ -11,8 +11,7 @@ import sys
 import threading
 import time
 
-# Using macOS native audio player for better background service compatibility
-MP3_PLAYER_CALL = "afplay {mp3_file}"
+
 
 
 class ShipsBellError(Exception):
@@ -32,6 +31,7 @@ class ShipsBell(threading.Thread):
         assert end >= start
         self.start_time = start
         self.end_time = end
+        self.audio_lock = threading.Lock()
 
     def run(self):  # pragma: no cover
         while True:
@@ -49,9 +49,16 @@ class ShipsBell(threading.Thread):
             # Strike bell at every half or full hour.
             if (minutes % ShipsBell.MINUTES_PER_HALF_HOUR) == 0:
                 double_strikes, single_strikes = self.compute_strikes(hours, minutes)
-                for _ in range(double_strikes):
+                
+                for i in range(double_strikes):
+                    if i > 0:
+                        time.sleep(0.8)
                     self.play_double_strike()
-                for _ in range(single_strikes):
+                if double_strikes > 0 and single_strikes > 0:
+                    time.sleep(0.8)
+                for i in range(single_strikes):
+                    if i > 0:
+                        time.sleep(0.8)
                     self.play_single_strike()
 
     @staticmethod
@@ -79,19 +86,25 @@ class ShipsBell(threading.Thread):
 
     def play_double_strike(self):
         """Play double strike bell sound."""
-        ShipsBell.play_mp3(self.working_dir + "/res/DoubleStrike.mp3")
+        self.trigger_user_audio("double")
 
     def play_single_strike(self):
         """Play single strike bell sound."""
-        ShipsBell.play_mp3(self.working_dir + "/res/SingleStrike.mp3")
+        self.trigger_user_audio("single")
 
-    @staticmethod
-    def play_mp3(path):
-        """Play MP3 file at given path using configured player."""
-        cmd = MP3_PLAYER_CALL.format(mp3_file=path).split()
-        exit_code = subprocess.call(cmd)
-        if exit_code != 0:
-            raise ShipsBellError("Failed to play " + path)
+    def trigger_user_audio(self, strike_type):
+        """Trigger audio via file system - completely separate from service process."""
+        trigger_dir = os.path.expanduser("~/.local/share/ships-bell")
+        os.makedirs(trigger_dir, exist_ok=True)
+        
+        trigger_file = os.path.join(trigger_dir, f"{strike_type}_strike")
+        
+        # Create trigger file - watcher process will detect and play audio
+        try:
+            with open(trigger_file, "w") as f:
+                f.write(str(time.time()))
+        except Exception as e:
+            raise ShipsBellError(f"Failed to create trigger file: {e}")
 
 
 def handle_args(args):

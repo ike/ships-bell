@@ -92,27 +92,33 @@ class TestShipsBell(unittest.TestCase):
         self.assertAlmostEqual(60.0, sb.compute_sleep_time(28))
         self.assertAlmostEqual(60.0, sb.compute_sleep_time(58))
 
-    @patch("subprocess.call")
-    def test_mp3_played(self, subprocess_call):
-        """Test MP3 playback functionality."""
+    @patch("builtins.open", create=True)
+    @patch("os.makedirs")
+    def test_trigger_files_created(self, mock_makedirs, mock_open):
+        """Test that trigger files are created for audio playback."""
         sb = ShipsBell(".", 0, 24)
-        subprocess_call.return_value = 0
+        mock_file = Mock()
+        mock_open.return_value.__enter__.return_value = mock_file
 
-        subprocess_call.reset_mock()
         sb.play_single_strike()
-        self.assertEqual(1, subprocess_call.call_count)
+        mock_open.assert_called()
+        mock_file.write.assert_called()
 
-        subprocess_call.reset_mock()
+        mock_open.reset_mock()
+        mock_file.reset_mock()
+        
         sb.play_double_strike()
-        self.assertEqual(1, subprocess_call.call_count)
+        mock_open.assert_called()
+        mock_file.write.assert_called()
 
-    @patch("subprocess.call")
-    def test_mp3_playing_error(self, subprocess_call):
-        """Test MP3 playback error handling."""
+    @patch("builtins.open", create=True)
+    @patch("os.makedirs")
+    def test_trigger_file_error_handling(self, mock_makedirs, mock_open):
+        """Test trigger file creation error handling."""
         sb = ShipsBell(".", 0, 24)
-
+        mock_open.side_effect = IOError("Permission denied")
+        
         with self.assertRaises(ShipsBellError):
-            subprocess_call.return_value = 1
             sb.play_single_strike()
 
     def test_respect_silent_period(self):
