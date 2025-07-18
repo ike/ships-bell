@@ -71,11 +71,79 @@ class ShipsBell(threading.Thread):
     @staticmethod
     def compute_strikes(hours, minutes):
         """Calculate number of double and single strikes for given time."""
-        # Single strike only on half hour.
-        single_strikes = 1 if minutes == ShipsBell.MINUTES_PER_HALF_HOUR else 0
-        double_strikes = hours % ShipsBell.MAX_DOUBLE_STRIKES
-        if double_strikes == 0 and single_strikes == 0:
-            double_strikes = ShipsBell.MAX_DOUBLE_STRIKES
+        # Maritime watch system: bells are struck every 30 minutes
+        # The number of bells indicates time elapsed since the start of the current watch
+
+        # Map specific times to bell counts based on traditional maritime watch system
+        time_to_bells = {
+            # First Watch (20:00-24:00)
+            (20, 30): 1,
+            (21, 0): 2,
+            (21, 30): 3,
+            (22, 0): 4,
+            (22, 30): 5,
+            (23, 0): 6,
+            (23, 30): 7,
+            (0, 0): 8,
+            # Middle Watch (00:00-04:00)
+            (0, 30): 1,
+            (1, 0): 2,
+            (1, 30): 3,
+            (2, 0): 4,
+            (2, 30): 5,
+            (3, 0): 6,
+            (3, 30): 7,
+            (4, 0): 8,
+            # Morning Watch (04:00-08:00)
+            (4, 30): 1,
+            (5, 0): 2,
+            (5, 30): 3,
+            (6, 0): 4,
+            (6, 30): 5,
+            (7, 0): 6,
+            (7, 30): 7,
+            (8, 0): 8,
+            # Forenoon Watch (08:00-12:00)
+            (8, 30): 1,
+            (9, 0): 2,
+            (9, 30): 3,
+            (10, 0): 4,
+            (10, 30): 5,
+            (11, 0): 6,
+            (11, 30): 7,
+            (12, 0): 8,
+            # Afternoon Watch (12:00-16:00)
+            (12, 30): 1,
+            (13, 0): 2,
+            (13, 30): 3,
+            (14, 0): 4,
+            (14, 30): 5,
+            (15, 0): 6,
+            (15, 30): 7,
+            (16, 0): 8,
+            # First Dog Watch (16:00-18:00) - only 4 bells max
+            (16, 30): 1,
+            (17, 0): 2,
+            (17, 30): 3,
+            (18, 0): 4,
+            # Second Dog Watch (18:00-20:00) - only 4 bells max
+            (18, 30): 1,
+            (19, 0): 2,
+            (19, 30): 3,
+            (20, 0): 4,
+        }
+
+        # Handle 24:00 as equivalent to 0:00
+        if hours == 24:
+            hours = 0
+
+        total_bells = time_to_bells.get((hours, minutes), 0)
+
+        # Convert total bells to double strikes and single strikes
+        # Pattern: each pair of bells = 1 double strike, odd bell = 1 single strike
+        double_strikes = total_bells // 2
+        single_strikes = total_bells % 2
+
         return (double_strikes, single_strikes)
 
     @staticmethod

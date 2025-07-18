@@ -19,15 +19,41 @@ This will:
 
 ## Bell Schedule
 
-- **Every 30 minutes**: Regular ship's bell chimes that follow the traditional maritime watch system
-  - **8 Bells**: 12, 4, 8
-  - **1 Bell**: 12:30, 4:30, 8:30
-  - **2 Bells**: 1, 5, 9
-  - **3 Bells**: 1:30, 5:30, 9:30
-  - **4 Bells**: 2, 6, 10
-  - **5 Bells**: 2:30, 6:30, 10:30
-  - **6 Bells**: 3, 7, 11
-  - **7 Bells**: 3:30, 7:30, 11:30
+Ship's Bell follows the traditional maritime watch system with seven distinct watch periods, including the famous "dogwatches" that break the cycle to ensure crew rotation.
+
+### Traditional Maritime Watch System
+
+| Bells | Pattern | First (20:00-24:00) | Middle (00:00-04:00) | Morning (04:00-08:00) | Forenoon (08:00-12:00) | Afternoon (12:00-16:00) | First Dog (16:00-18:00) | Second Dog (18:00-20:00) |
+|-------|---------|---------------------|----------------------|----------------------|------------------------|-------------------------|-------------------------|--------------------------|
+| One   | 1       | 20:30               | 00:30                | 04:30                | 08:30                  | 12:30                   | 16:30                   | 18:30                    |
+| Two   | 2       | 21:00               | 01:00                | 05:00                | 09:00                  | 13:00                   | 17:00                   | 19:00                    |
+| Three | 2,1     | 21:30               | 01:30                | 05:30                | 09:30                  | 13:30                   | 17:30                   | 19:30                    |
+| Four  | 2,2     | 22:00               | 02:00                | 06:00                | 10:00                  | 14:00                   | 18:00                   | 20:00                    |
+| Five  | 2,2,1   | 22:30               | 02:30                | 06:30                | 10:30                  | 14:30                   | -                       | -                        |
+| Six   | 2,2,2   | 23:00               | 03:00                | 07:00                | 11:00                  | 15:00                   | -                       | -                        |
+| Seven | 2,2,2,1 | 23:30               | 03:30                | 07:30                | 11:30                  | 15:30                   | -                       | -                        |
+| Eight | 2,2,2,2 | 00:00               | 04:00                | 08:00                | 12:00                  | 16:00                   | -                       | -                        |
+
+### Watch Periods Explained
+
+- **First Watch** (20:00-24:00): Evening watch from 8 PM to midnight
+- **Middle Watch** (00:00-04:00): Night watch from midnight to 4 AM  
+- **Morning Watch** (04:00-08:00): Dawn watch from 4 AM to 8 AM
+- **Forenoon Watch** (08:00-12:00): Morning watch from 8 AM to noon
+- **Afternoon Watch** (12:00-16:00): Day watch from noon to 4 PM
+- **First Dog Watch** (16:00-18:00): Short evening watch from 4 PM to 6 PM
+- **Second Dog Watch** (18:00-20:00): Short evening watch from 6 PM to 8 PM
+
+### The Dogwatch System
+
+The two "dogwatches" are only 2 hours each (instead of the standard 4 hours), which serves an important purpose: it prevents the same crew members from always standing the same watches. Without dogwatches, sailors would be stuck with the same schedule every day. The dogwatches rotate the schedule, ensuring fair distribution of the less desirable night watches.
+
+### Bell Patterns
+
+- **Single Strike** (1): One bell sound
+- **Double Strike** (2): Two bell sounds struck quickly together  
+- **Pattern** shows the sequence: "2,2,1" means two double strikes followed by one single strike
+
 - **Configurable hours**: Default 9 AM to 8 PM, customizable during installation
 
 ### Custom Schedule

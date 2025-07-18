@@ -123,7 +123,11 @@ class TestInstallers(unittest.TestCase):  # pylint: disable=too-many-public-meth
     @patch("shutil.copy")
     @patch("shutil.copytree")
     def test_install_macos_service_environment_variables(
-        self, mock_copytree, mock_copy, mock_makedirs, mock_run  # pylint: disable=unused-argument
+        self,
+        mock_copytree,  # pylint: disable=unused-argument
+        mock_copy,  # pylint: disable=unused-argument
+        mock_makedirs,  # pylint: disable=unused-argument
+        mock_run  # pylint: disable=unused-argument
     ):
         """Test that install-macos-service.sh respects environment variables."""
         script_path = os.path.join(self.script_dir, "install-macos-service.sh")
